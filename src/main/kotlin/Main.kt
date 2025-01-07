@@ -1,15 +1,11 @@
 package com.nikitar
 
-import com.nikitar.client.ClientHandler
+import com.nikitar.client.Worker
 import com.nikitar.command.CommandReader
-import com.nikitar.request.IncomingRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.io.File
-import java.lang.Exception
 import java.net.ServerSocket
-import java.net.Socket
 
 fun main(args: Array<String>) {
     val config = CommandReader.parseArgs(args)
@@ -23,13 +19,9 @@ fun main(args: Array<String>) {
                 val clientSocket = serverSocket.accept()
                 // create new worker for each request
                 launch(Dispatchers.IO) {
-                    handleClient(clientSocket)
+                    Worker.handle(clientSocket)
                 }
             }
         }
     }
-}
-
-suspend fun handleClient(clientSocket: Socket) {
-    ClientHandler.handle(clientSocket)
 }
